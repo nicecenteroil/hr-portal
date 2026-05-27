@@ -1,0 +1,24 @@
+{
+  "short_name": "Nice HR",
+  "name": "Nicecenter Oil - ระบบบันทึกวันลาพนักงาน",
+  "description": "ระบบบันทึกวันลาพนักงานของ Nicecenter Oil สำหรับจัดการข้อมูลวันลา ดูสิทธิ์คงเหลือ และปฏิทินวันลารายสัปดาห์",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0f172a",
+  "display": "standalone",
+  "theme_color": "#0f172a",
+  "orientation": "portrait"
+}
