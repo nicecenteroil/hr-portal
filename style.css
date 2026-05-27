@@ -1760,6 +1760,11 @@ body.light-theme .calendar-sunday-block {
     .portal-grid {
         display: flex;
         flex-direction: column;
+        align-items: stretch;
+    }
+    .portal-left,
+    .portal-right {
+        width: 100%;
     }
     .portal-right {
         order: -1; /* Display leave form first on mobile/tablet */
