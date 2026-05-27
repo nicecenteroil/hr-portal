@@ -1981,11 +1981,73 @@ body.light-theme .calendar-sunday-block {
     .leave-form-container {
         padding: 20px;
     }
+
+    .app-container {
+        padding: 12px;
+    }
+
+    .history-container {
+        padding: 16px;
+    }
+
+    /* History Table Mobile Styles */
+    .history-table {
+        display: block;
+        width: 100%;
+    }
+
+    .history-table thead {
+        display: none;
+    }
+
+    .history-table tbody,
+    .history-table tr {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .history-table tr {
+        border-bottom: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+
+    .history-table tr:last-child {
+        border-bottom: none !important;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .history-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 6px !important;
+        border: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+        width: 100% !important;
+        box-sizing: border-box;
+        text-align: right;
+    }
+
+    .history-table td:last-child {
+        border-bottom: none !important;
+    }
+
+    .history-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 12.5px;
+    }
 }
 
 @media (max-width: 480px) {
     .calendar-container,
-    .leave-form-container {
+    .leave-form-container,
+    .history-container {
         padding: 16px;
     }
 

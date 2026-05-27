@@ -1069,14 +1069,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             tr.innerHTML = `
-                <td>
+                <td data-label="ประเภท">
                     <span class="badge ${badgeClass}">${typeName}</span>
                     ${halfText}
                 </td>
-                <td style="line-height: 1.4;">${dateStr}</td>
-                <td style="font-weight: 600; font-family: var(--font-primary);">${l.days} วัน</td>
-                <td style="max-width: 250px; white-space: normal; line-height: 1.4;">${l.reason}</td>
-                <td>${actionBtnHtml}</td>
+                <td data-label="ช่วงวันที่ลา" style="line-height: 1.4;">${dateStr}</td>
+                <td data-label="จำนวนวัน" style="font-weight: 600; font-family: var(--font-primary);">${l.days} วัน</td>
+                <td data-label="เหตุผลการลา" style="max-width: 250px; white-space: normal; line-height: 1.4;">${l.reason}</td>
+                <td data-label="จัดการ">${actionBtnHtml}</td>
             `;
 
             const cancelBtn = tr.querySelector('.btn-cancel-leave');
