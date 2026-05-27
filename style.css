@@ -1866,7 +1866,7 @@ body.light-theme .calendar-sunday-block {
     /* Streamlined Calendar Vertical Stacking on Mobile */
     .table-responsive {
         border: none;
-        overflow-x: visible;
+        overflow-x: auto;
     }
     
     .calendar-table {
