@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nicecenter Oil - ระบบบันทึกวันลาพนักงาน</title>
+    <meta name="description" content="ระบบบันทึกวันลาพนักงานของ Nicecenter Oil สำหรับจัดการข้อมูลวันลา ดูสิทธิ์คงเหลือ และปฏิทินวันลารายสัปดาห์แบบเรียลไทม์">
+    
+    <!-- Google Fonts: Inter for English and Prompt for Thai (Premium Looks) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Modern Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme"> <!-- Default to premium dark theme -->
+    
+    <!-- Background Glow Effects for Glassmorphism -->
+    <div class="glow-bg">
+        <div class="glow-sphere sphere-1"></div>
+        <div class="glow-sphere sphere-2"></div>
+        <div class="glow-sphere sphere-3"></div>
+    </div>
+
+    <div class="app-container">
+        
+        <!-- Global Header -->
+        <header class="app-header glass-effect">
+            <div class="header-brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-droplet brand-icon animate-pulse"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Nicecenter <span>Oil</span></h1>
+                    <p>ระบบบันทึกวันลาพนักงาน</p>
+                </div>
+            </div>
+            
+            <!-- Dynamic Navigation Tabs (Visible when logged in) -->
+            <nav id="app-nav" class="app-nav hidden">
+                <button id="nav-btn-calendar" class="nav-item active">
+                    <i class="fa-solid fa-calendar-week"></i> ตารางรวมสัปดาห์นี้
+                </button>
+                <button id="nav-btn-portal" class="nav-item">
+                    <i class="fa-solid fa-file-signature"></i> บันทึกวันลาของฉัน
+                </button>
+            </nav>
+            
+            <div class="header-actions">
+                <!-- Theme Switcher -->
+                <button id="theme-toggle" class="btn-icon glass-effect" title="เปลี่ยนโหมดสี">
+                    <i class="fa-solid fa-sun icon-light"></i>
+                    <i class="fa-solid fa-moon icon-dark"></i>
+                </button>
+                
+                <!-- User Status Area -->
+                <div id="header-user-status" class="user-status-container hidden">
+                    <span class="user-avatar" id="header-user-avatar">N</span>
+                    <div class="user-meta">
+                        <span class="user-name" id="header-user-name">คุณออย</span>
+                        <span class="user-role" id="header-user-role">Assistant Manager</span>
+                    </div>
+                    <button id="btn-logout" class="btn btn-danger btn-sm">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> ออกจากระบบ
+                    </button>
+                </div>
+                
+                <!-- Guest Login Button -->
+                <button id="btn-goto-login" class="btn btn-primary animate-hover">
+                    <i class="fa-solid fa-right-to-bracket"></i> พนักงานล็อกอิน
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Body Area -->
+        <main class="app-main">
+            
+            <!-- VIEW 1: Public Weekly Leave Calendar (Default View) -->
+            <section id="view-public-calendar" class="app-view active">
+                <!-- Dashboard Info Banner & Statistics -->
+                <div class="dashboard-summary-grid">
+                    <div class="summary-card glass-effect card-gradient-amber">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>จำนวนพนักงาน</h3>
+                            <p class="summary-value" id="stats-total-staff">6 คน</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card glass-effect card-gradient-emerald">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>ปฏิบัติงานวันนี้</h3>
+                            <p class="summary-value" id="stats-active-today">6 / 6</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card glass-effect card-gradient-rose">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-calendar-minus"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>ลากิจ/ลาป่วยสัปดาห์นี้</h3>
+                            <p class="summary-value" id="stats-leaves-this-week">0 วัน</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Section -->
+                <div class="calendar-container glass-effect">
+                    <div class="calendar-header">
+                        <div class="calendar-title">
+                            <i class="fa-solid fa-calendar-week title-icon"></i>
+                            <div>
+                                <h2>ตารางบันทึกวันลาประจำสัปดาห์</h2>
+                                <span class="calendar-subtitle" id="calendar-week-range">วันที่ 25 พ.ค. 2026 - 31 พ.ค. 2026</span>
+                            </div>
+                        </div>
+                        
+                        <div class="calendar-navigation">
+                            <button id="btn-prev-week" class="btn btn-secondary btn-sm" title="สัปดาห์ก่อนหน้า">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <button id="btn-current-week" class="btn btn-outline btn-sm">
+                                สัปดาห์ปัจจุบัน
+                            </button>
+                            <button id="btn-next-week" class="btn btn-secondary btn-sm" title="สัปดาห์ถัดไป">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- The Responsive Weekly Calendar Grid -->
+                    <div class="table-responsive">
+                        <table class="calendar-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-day" data-day="1">จันทร์<br><span class="date-label">25 พ.ค.</span></th>
+                                    <th class="col-day" data-day="2">อังคาร<br><span class="date-label">26 พ.ค.</span></th>
+                                    <th class="col-day" data-day="3">พุธ<br><span class="date-label">27 พ.ค.</span></th>
+                                    <th class="col-day" data-day="4">พฤหัสบดี<br><span class="date-label">28 พ.ค.</span></th>
+                                    <th class="col-day" data-day="5">ศุกร์<br><span class="date-label">29 พ.ค.</span></th>
+                                    <th class="col-day" data-day="6">เสาร์<br><span class="date-label">30 พ.ค.</span></th>
+                                    <th class="col-day" data-day="7">อาทิตย์<br><span class="date-label">31 พ.ค.</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-tbody">
+                                <!-- Generated Dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Calendar Legend Indicators -->
+                    <div class="calendar-legend">
+                        <span class="legend-title">คำอธิบายสัญลักษณ์:</span>
+                        <div class="legend-item"><span class="badge badge-sick">ลาป่วย (Sick)</span></div>
+                        <div class="legend-item"><span class="badge badge-personal">ลากิจ (Personal)</span></div>
+                        <div class="legend-item"><span class="badge badge-annual">ลาพักร้อน (Annual)</span></div>
+                        <div class="legend-item"><span class="badge badge-half">ครึ่งวัน (Half-Day)</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 2: Login Portal -->
+            <section id="view-login" class="app-view">
+                <div class="login-wrapper">
+                    <div class="login-card glass-effect">
+                        <button id="btn-login-back" class="btn-close" title="กลับหน้าแรก">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        
+                        <div class="login-header">
+                            <i class="fa-solid fa-shield-halved login-shield-icon"></i>
+                            <h2>เข้าสู่ระบบพนักงาน</h2>
+                            <p>กรุณาเลือกชื่อของคุณและป้อนรหัสผ่าน PIN 4 หลัก</p>
+                        </div>
+                        
+                        <!-- Select Employee Grid -->
+                        <div class="login-employee-selector">
+                            <label class="input-label">1. เลือกชื่อพนักงาน:</label>
+                            <div class="employee-grid" id="login-employee-grid">
+                                <!-- Generated Dynamically via JS -->
+                            </div>
+                        </div>
+
+                        <!-- PIN Input Overlay -->
+                        <div class="login-pin-section disabled" id="login-pin-section">
+                            <label class="input-label">2. กรอกรหัส PIN (เริ่มต้น 1234):</label>
+                            
+                            <!-- Display dots for password -->
+                            <div class="pin-display">
+                                <div class="pin-dot"></div>
+                                <div class="pin-dot"></div>
+                                <div class="pin-dot"></div>
+                                <div class="pin-dot"></div>
+                            </div>
+                            
+                            <div id="login-error" class="login-error-msg hidden">
+                                <i class="fa-solid fa-circle-exclamation"></i> รหัส PIN ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+                            </div>
+
+                            <!-- Numeric keypad for passcode entry -->
+                            <div class="pin-pad">
+                                <button type="button" class="pin-btn" data-val="1">1</button>
+                                <button type="button" class="pin-btn" data-val="2">2</button>
+                                <button type="button" class="pin-btn" data-val="3">3</button>
+                                <button type="button" class="pin-btn" data-val="4">4</button>
+                                <button type="button" class="pin-btn" data-val="5">5</button>
+                                <button type="button" class="pin-btn" data-val="6">6</button>
+                                <button type="button" class="pin-btn" data-val="7">7</button>
+                                <button type="button" class="pin-btn" data-val="8">8</button>
+                                <button type="button" class="pin-btn" data-val="9">9</button>
+                                <button type="button" class="pin-btn action-btn" data-val="C" title="ล้างรหัส">C</button>
+                                <button type="button" class="pin-btn" data-val="0">0</button>
+                                <button type="button" class="pin-btn action-btn" data-val="B" title="ลบตัวสุดท้าย">
+                                    <i class="fa-solid fa-delete-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 3: Private Employee Portal -->
+            <section id="view-employee-portal" class="app-view">
+                <!-- Welcome Banner -->
+                <div class="employee-welcome-banner glass-effect" id="employee-welcome-banner">
+                    <div class="welcome-profile">
+                        <span class="user-avatar-large" id="emp-avatar">O</span>
+                        <div class="welcome-text">
+                            <h2>สวัสดีตอนเช้า, <span id="emp-name">คุณออย</span> ✨</h2>
+                            <p id="emp-role-dept">Assistant Manager • Nicecenter Oil</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-outline animate-hover" id="btn-back-to-home">
+                        <i class="fa-solid fa-calendar-days"></i> ดูปฏิทินรวมสัปดาห์นี้
+                    </button>
+                </div>
+
+                <!-- Admin Leave Cancellation Approval Section (Visible to Nasawan/Managers only) -->
+                <div class="admin-approval-section glass-effect hidden" id="admin-approval-section">
+                    <div class="admin-header">
+                        <div class="admin-title">
+                            <i class="fa-solid fa-user-shield header-icon text-amber animate-pulse"></i>
+                            <div>
+                                <h3>แผงควบคุมผู้อนุมัติ: คำขออนุมัติยกเลิกวันลา</h3>
+                                <p class="admin-subtitle">คำขอยกเลิกวันลาของพนักงานที่รอการอนุมัติจากคุณ ณัสวรรณ</p>
+                            </div>
+                        </div>
+                        <span class="badge badge-amber badge-pill" id="admin-pending-count">0 คำขอค้างอยู่</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="admin-approval-table">
+                            <thead>
+                                <tr>
+                                    <th>พนักงาน</th>
+                                    <th>ประเภท</th>
+                                    <th>ช่วงวันที่ลา</th>
+                                    <th>จำนวนวัน</th>
+                                    <th>เหตุผลการลา</th>
+                                    <th style="text-align: center;">การดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-approval-tbody">
+                                <!-- Generated Dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="admin-approval-empty" class="admin-empty-state">
+                        <i class="fa-solid fa-circle-check empty-icon text-success"></i>
+                        <p>ไม่มีคำขอยกเลิกวันลาค้างอยู่ ปฏิบัติงานปกติ</p>
+                    </div>
+                </div>
+
+                <!-- Two-Column Layout -->
+                <div class="portal-grid">
+                    
+                    <!-- Column 1: Leave Quota & History -->
+                    <div class="portal-left">
+                        <!-- Leave Quotas Section -->
+                        <div class="section-title">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <h3>สิทธิ์วันลาคงเหลือประจำปี 2026</h3>
+                        </div>
+                        
+                        <div class="quota-cards-container">
+                            <!-- Sick Leave Quota -->
+                            <div class="quota-card glass-effect border-sick">
+                                <div class="quota-card-header">
+                                    <h4>ลาป่วย <span class="subtext">Sick Leave</span></h4>
+                                    <i class="fa-solid fa-house-chimney-medical text-sick"></i>
+                                </div>
+                                <div class="quota-progress-container">
+                                    <svg class="progress-ring" width="100" height="100">
+                                        <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"/>
+                                        <circle class="progress-ring-circle" id="ring-sick" stroke="var(--sick)" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+                                    </svg>
+                                    <div class="quota-ring-text">
+                                        <span class="quota-rem" id="quota-sick-rem">30</span>
+                                        <span class="quota-unit">วันเหลือ</span>
+                                    </div>
+                                </div>
+                                <div class="quota-footer">
+                                    <span>ใช้ไป <strong id="quota-sick-used">0</strong> จาก 30 วัน</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Personal Leave Quota -->
+                            <div class="quota-card glass-effect border-personal">
+                                <div class="quota-card-header">
+                                    <h4>ลากิจ <span class="subtext">Personal Leave</span></h4>
+                                    <i class="fa-solid fa-briefcase text-personal"></i>
+                                </div>
+                                <div class="quota-progress-container">
+                                    <svg class="progress-ring" width="100" height="100">
+                                        <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"/>
+                                        <circle class="progress-ring-circle" id="ring-personal" stroke="var(--personal)" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+                                    </svg>
+                                    <div class="quota-ring-text">
+                                        <span class="quota-rem" id="quota-personal-rem">10</span>
+                                        <span class="quota-unit">วันเหลือ</span>
+                                    </div>
+                                </div>
+                                <div class="quota-footer">
+                                    <span>ใช้ไป <strong id="quota-personal-used">0</strong> จาก 10 วัน</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Annual Leave Quota -->
+                            <div class="quota-card glass-effect border-annual">
+                                <div class="quota-card-header">
+                                    <h4>ลาพักร้อน <span class="subtext">Annual Leave</span></h4>
+                                    <i class="fa-solid fa-umbrella-beach text-annual"></i>
+                                </div>
+                                <div class="quota-progress-container">
+                                    <svg class="progress-ring" width="100" height="100">
+                                        <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"/>
+                                        <circle class="progress-ring-circle" id="ring-annual" stroke="var(--annual)" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+                                    </svg>
+                                    <div class="quota-ring-text">
+                                        <span class="quota-rem" id="quota-annual-rem">15</span>
+                                        <span class="quota-unit">วันเหลือ</span>
+                                    </div>
+                                </div>
+                                <div class="quota-footer">
+                                    <span>ใช้ไป <strong id="quota-annual-used">0</strong> จาก 15 วัน</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- My Leave History Section -->
+                        <div class="history-container glass-effect">
+                            <div class="history-header">
+                                <h3><i class="fa-solid fa-clock-rotate-left header-icon"></i> ประวัติการลาของคุณ</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="history-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ประเภท</th>
+                                            <th>ช่วงวันที่ลา</th>
+                                            <th>จำนวนวัน</th>
+                                            <th>เหตุผลการลา</th>
+                                            <th>จัดการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="history-tbody">
+                                        <!-- Generated Dynamically via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="history-empty" class="history-empty hidden">
+                                <i class="fa-solid fa-folder-open empty-icon"></i>
+                                <p>ไม่พบประวัติการลาหยุดงาน</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Leave Application Form -->
+                    <div class="portal-right">
+                        <div class="leave-form-container glass-effect">
+                            <div class="form-header">
+                                <h3><i class="fa-solid fa-file-pen header-icon"></i> บันทึกวันลาใหม่</h3>
+                                <p>กรอกข้อมูลรายละเอียดการลาหยุดให้ครบถ้วน</p>
+                            </div>
+                            
+                            <form id="leave-request-form" novalidate>
+                                <!-- Leave Type Picker -->
+                                <div class="form-group">
+                                    <label class="input-label">ประเภทการลา <span class="required">*</span></label>
+                                    <div class="leave-type-selector-buttons">
+                                        <label class="type-btn-label">
+                                            <input type="radio" name="leave-type" value="sick" checked>
+                                            <span class="type-btn-custom color-sick">
+                                                <i class="fa-solid fa-house-chimney-medical"></i> ลาป่วย
+                                            </span>
+                                        </label>
+                                        <label class="type-btn-label">
+                                            <input type="radio" name="leave-type" value="personal">
+                                            <span class="type-btn-custom color-personal">
+                                                <i class="fa-solid fa-briefcase"></i> ลากิจ
+                                            </span>
+                                        </label>
+                                        <label class="type-btn-label">
+                                            <input type="radio" name="leave-type" value="annual">
+                                            <span class="type-btn-custom color-annual">
+                                                <i class="fa-solid fa-umbrella-beach"></i> ลาพักร้อน
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Half Day Option Checkbox -->
+                                <div class="form-group">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="chk-half-day">
+                                        <span class="checkmark"></span>
+                                        ขอลากิจ/ป่วย ครึ่งวัน (Half-Day Leave)
+                                    </label>
+                                </div>
+
+                                <!-- Date Ranges -->
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label class="input-label" id="lbl-start-date">วันที่ลาเริ่มต้น <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-regular fa-calendar-days input-icon"></i>
+                                            <input type="date" id="input-start-date" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-6" id="group-end-date">
+                                        <label class="input-label">วันที่สิ้นสุดการลา <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-regular fa-calendar-days input-icon"></i>
+                                            <input type="date" id="input-end-date" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Half Day Options (Hidden by default) -->
+                                <div class="form-group hidden" id="group-half-day-period">
+                                    <label class="input-label">ช่วงเวลาการลาครึ่งวัน <span class="required">*</span></label>
+                                    <div class="half-day-options">
+                                        <label class="half-day-opt">
+                                            <input type="radio" name="half-day-period" value="morning" checked>
+                                            <span class="half-day-box">
+                                                <i class="fa-solid fa-sun text-amber"></i> ครึ่งวันเช้า (08:00 - 12:00 น.)
+                                            </span>
+                                        </label>
+                                        <label class="half-day-opt">
+                                            <input type="radio" name="half-day-period" value="afternoon">
+                                            <span class="half-day-box">
+                                                <i class="fa-solid fa-cloud-sun text-indigo"></i> ครึ่งวันบ่าย (13:00 - 17:00 น.)
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Reason for Leave -->
+                                <div class="form-group">
+                                    <label class="input-label">เหตุผลการลาหยุดงาน <span class="required">*</span></label>
+                                    <div class="input-with-icon align-top">
+                                        <i class="fa-solid fa-quote-left input-icon textarea-icon"></i>
+                                        <textarea id="input-reason" rows="3" placeholder="ระบุความจำเป็น เช่น เป็นไข้หวัดสูง, มีนัดทำธุระที่อำเภอ..." required></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Live Calculation Summary -->
+                                <div class="form-live-summary" id="form-live-summary">
+                                    <i class="fa-solid fa-calculator"></i>
+                                    <span>คำนวณวันลา: <strong id="summary-total-days">1 วัน</strong></span>
+                                    <span class="balance-after" id="summary-balance-after">โควตาหลังหักวันลา: 15 วัน</span>
+                                </div>
+
+                                <!-- Form Error Message -->
+                                <div class="form-error-msg hidden" id="form-error-msg">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <span id="form-error-text">เกิดข้อผิดพลาดในการตรวจสอบข้อมูล</span>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary btn-block animate-hover" id="btn-submit-leave">
+                                    <i class="fa-solid fa-circle-check"></i> บันทึกและยืนยันการลา
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+        <!-- App Footer -->
+        <footer class="app-footer">
+            <p>© 2026 Nicecenter Oil Company Limited. สงวนลิขสิทธิ์ทั้งหมด</p>
+            <p class="footer-credit">Designed with <i class="fa-solid fa-heart animate-heart"></i> for premium operational efficiency.</p>
+        </footer>
+    </div>
+
+    <!-- Notification Toast Element -->
+    <div id="toast-notification" class="toast-container hidden">
+        <div class="toast-icon" id="toast-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div class="toast-content">
+            <h4 id="toast-title">สำเร็จ</h4>
+            <p id="toast-message">ข้อมูลได้รับการบันทึกเรียบร้อย</p>
+        </div>
+    </div>
+
+    <!-- App Logic Script -->
+    <script src="app.js"></script>
+</body>
+</html>
