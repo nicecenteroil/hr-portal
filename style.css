@@ -1471,7 +1471,10 @@ body.light-theme .calendar-sunday-block {
 
 .input-with-icon input[type="date"],
 .input-with-icon textarea {
+    display: block;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     padding: 12px 14px 12px 42px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-glass);
@@ -1958,21 +1961,26 @@ body.light-theme .calendar-sunday-block {
     }
 
     .form-row {
-        flex-direction: column;
-        gap: 0;
+        display: block;
     }
 
     .col-6 {
         width: 100%;
+        display: block;
     }
 
     #group-end-date {
         margin-top: 18px;
     }
+
+    .leave-form-container {
+        padding: 20px;
+    }
 }
 
 @media (max-width: 480px) {
-    .calendar-container {
+    .calendar-container,
+    .leave-form-container {
         padding: 16px;
     }
 

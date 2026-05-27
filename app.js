@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUser: null,
         selectedEmployeeForLogin: null,
         pinBuffer: '',
-        currentDate: new Date('2026-05-25T10:00:00+07:00'),
+        currentDate: new Date(),
         calendarWeekStart: null,
         employees: [...STATIC_EMPLOYEES], // Populated dynamically from API or static list
         leaves: [],
